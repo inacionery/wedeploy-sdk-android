@@ -142,38 +142,71 @@ public class Aggregation extends BodyConvertible {
 	}
 
 	/**
-	 * Creates an {@link Aggregation} instance with the <code>histogram</code>
+	 * Creates an {@link BucketOrderAggregation} instance with the <code>histogram</code>
 	 * operator.
 	 * @param name The aggregation name
 	 * @param field The aggregation field
 	 * @param interval The histogram Interval
-	 * @return {@link Aggregation}
+	 * @return {@link BucketOrderAggregation}
 	 */
-	public static Aggregation histogram(
+	public static BucketOrderAggregation histogram(
 		String name, String field, int interval) {
 
-		return new Aggregation(name, field, "histogram", interval);
+		return new BucketOrderAggregation(name, field, "histogram", interval);
 	}
 
 	/**
-	 * Creates an {@link Aggregation} instance with the
+	 * Creates an {@link BucketOrderAggregation} instance with the <code>histogram</code>
+	 * operator.
+	 * @param name The aggregation name
+	 * @param field The aggregation field
+	 * @param interval The histogram Interval
+	 * @param bucketOrder The bucket order of this aggregation
+	 * @return {@link BucketOrderAggregation}
+	 */
+	public static BucketOrderAggregation histogram(
+		String name, String field, int interval, BucketOrder... bucketOrder) {
+
+		return new BucketOrderAggregation(
+			name, field, "histogram", interval, bucketOrder);
+	}
+
+	/**
+	 * Creates an {@link BucketOrderAggregation} instance with the
 	 * <code>date_histogram</code> operator.
 	 * Similar to the {@link #histogram(String, String, int)} except it can only
 	 * be applied on {@link Interval} dates.
 	 * @param name The aggregation name
 	 * @param field The aggregation field
 	 * @param interval The histogram {@link Interval}
-	 * @return {@link Aggregation}
+	 * @return {@link BucketOrderAggregation}
 	 */
-	public static Aggregation histogram(
+	public static BucketOrderAggregation histogram(
 		String name, String field, Interval interval) {
 
-		return new Aggregation(
-			name, field, "date_histogram", interval.name().toLowerCase());
+		return new BucketOrderAggregation(name, field, "date_histogram", interval.getRawValue());
 	}
 
 	/**
-	 * Creates an {@link Aggregation} instance with the
+	 * Creates an {@link BucketOrderAggregation} instance with the
+	 * <code>date_histogram</code> operator.
+	 * Similar to the {@link #histogram(String, String, int)} except it can only
+	 * be applied on {@link Interval} dates.
+	 * @param name The aggregation name
+	 * @param field The aggregation field
+	 * @param interval The histogram {@link Interval}
+	 * @param bucketOrder The bucket order of this aggregation
+	 * @return {@link BucketOrderAggregation}
+	 */
+	public static BucketOrderAggregation histogram(
+		String name, String field, Interval interval, BucketOrder bucketOrder) {
+
+		return new BucketOrderAggregation(
+			name, field, "date_histogram", interval.getRawValue(), bucketOrder);
+	}
+
+	/**
+	 * Creates an {@link BucketOrderAggregation} instance with the
 	 * <code>date_histogram</code> operator.
 	 * Similar to the {@link #histogram(String, String, int)} except it can
 	 * only be applied on {@link TimeUnit} values.
@@ -181,13 +214,33 @@ public class Aggregation extends BodyConvertible {
 	 * @param field The aggregation field
 	 * @param value The histogram value
 	 * @param timeUnit The histogram timeUnit
-	 * @return {@link Aggregation}
+	 * @return {@link BucketOrderAggregation}
 	 */
-	public static Aggregation histogram(
+	public static BucketOrderAggregation histogram(
 		String name, String field, int value, TimeUnit timeUnit) {
 
-		String rawValue = String.valueOf(value) + timeUnit.getRawValue();
-		return new Aggregation(name, field, "date_histogram", rawValue);
+		return new BucketOrderAggregation(
+			name, field, "date_histogram", timeUnit.getRawValue(value));
+	}
+
+	/**
+	 * Creates an {@link BucketOrderAggregation} instance with the
+	 * <code>date_histogram</code> operator.
+	 * Similar to the {@link #histogram(String, String, int)} except it can
+	 * only be applied on {@link TimeUnit} values.
+	 * @param name The aggregation name
+	 * @param field The aggregation field
+	 * @param value The histogram value
+	 * @param timeUnit The histogram timeUnit
+	 * @param bucketOrder The bucket order of this aggregation
+	 * @return {@link BucketOrderAggregation}
+	 */
+	public static BucketOrderAggregation histogram(
+		String name, String field, int value, TimeUnit timeUnit,
+		BucketOrder... bucketOrder) {
+
+		return new BucketOrderAggregation(
+			name, field,  "date_histogram", timeUnit.getRawValue(value), bucketOrder);
 	}
 
 	/**
@@ -270,42 +323,45 @@ public class Aggregation extends BodyConvertible {
 	}
 
 	/**
-	 * Creates an {@link TermsAggregation} instance with the <code>terms</code>
+	 * Creates an {@link BucketOrderAggregation} instance with the <code>terms</code>
 	 * operator.
 	 * @param name The aggregation name
 	 * @param field The aggregation field
-	 * @return {@link TermsAggregation}
+	 * @return {@link BucketOrderAggregation}
 	 */
-	public static TermsAggregation terms(String name, String field) {
-		return new TermsAggregation(name, field);
+	public static BucketOrderAggregation terms(String name, String field) {
+		return new BucketOrderAggregation(name, field, "terms");
 	}
 
 	/**
-	 * Creates an {@link TermsAggregation} instance with the <code>terms</code>
+	 * Creates an {@link BucketOrderAggregation} instance with the <code>terms</code>
 	 * operator.
 	 * @param name The aggregation name
 	 * @param field The aggregation field
-	 * @param size Represents how many term buckets should be returned
-	 * @return {@link TermsAggregation}
+	 * @param bucketOrder The bucket order of this aggregation
+	 * @return {@link BucketOrderAggregation}
 	 */
-	public static TermsAggregation terms(String name, String field, int size) {
-		return new TermsAggregation(name, field, size);
+	public static BucketOrderAggregation terms(
+		String name, String field, BucketOrder... bucketOrder) {
+
+		return new BucketOrderAggregation(name, field, "terms", bucketOrder);
 	}
 
 	/**
-	 * Creates an {@link TermsAggregation} instance with the <code>terms</code>
+	 * Creates an {@link BucketOrderAggregation} instance with the <code>terms</code>
 	 * operator.
-	 * {@link TermsAggregation} supports {@link BucketOrder} aggregations
+	 * {@link BucketOrderAggregation} supports {@link BucketOrder} aggregations
 	 * @param name The aggregation name
 	 * @param field The aggregation field
 	 * @param size Represents how many term buckets should be returned
 	 * @param bucketOrder The bucket order of this aggregation
-	 * @return {@link TermsAggregation}
+	 * @return {@link BucketOrderAggregation}
 	 */
-	public static TermsAggregation terms(
+	public static BucketOrderAggregation terms(
 		String name, String field, int size, BucketOrder... bucketOrder) {
 
-		return new TermsAggregation(name, field, size, bucketOrder);
+		return new BucketOrderAggregation(
+			name, field, "terms", null, size, bucketOrder);
 	}
 
 	/**
@@ -359,9 +415,21 @@ public class Aggregation extends BodyConvertible {
 		return bodies;
 	}
 
-	protected final Object value;
-	protected final String field;
-	protected List<Aggregation> aggregations;
+	protected Object getValue() {
+		return value;
+	}
+
+	protected String getField() {
+		return field;
+	}
+
+	protected String getName() {
+		return name;
+	}
+
+	private List<Aggregation> aggregations;
+	private final Object value;
+	private final String field;
 	private final String name;
 	private final String operator;
 	private static final ThreadLocal<Set<Aggregation>>

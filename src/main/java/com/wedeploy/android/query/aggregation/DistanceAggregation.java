@@ -49,7 +49,7 @@ public class DistanceAggregation extends Aggregation {
 
 		super(name, field, "geoDistance", new HashMap());
 
-		Map map = (Map)value;
+		Map map = (Map) getValue();
 		this.ranges = new ArrayList();
 		this.ranges.addAll(Arrays.asList(ranges));
 
@@ -97,7 +97,7 @@ public class DistanceAggregation extends Aggregation {
 	 * @return {@link DistanceAggregation}
 	 */
 	public DistanceAggregation unit(String unit) {
-		((Map)value).put("unit", unit);
+		((Map) getValue()).put("unit", unit);
 		return this;
 	}
 

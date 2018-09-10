@@ -53,8 +53,8 @@ public enum TimeUnit {
 	/**
 	 * Returns the raw value of this type.
 	 */
-	public String getRawValue() {
-		return rawValue;
+	public String getRawValue(Object value) {
+		return String.valueOf(value) + rawValue;
 	}
 
 	private String rawValue;

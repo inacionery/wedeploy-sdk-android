@@ -44,7 +44,7 @@ public class RangeAggregation extends Aggregation {
 
 	RangeAggregation(String name, String field, Range... ranges) {
 		super(name, field, "range", new ArrayList());
-		((List)this.value).addAll(Arrays.asList(ranges));
+		((List)this. getValue()).addAll(Arrays.asList(ranges));
 	}
 
 	/**
@@ -63,7 +63,7 @@ public class RangeAggregation extends Aggregation {
 	 * @return {@link DistanceAggregation}
 	 */
 	public RangeAggregation range(Range range) {
-		((List)this.value).add(range);
+		((List)this.getValue()).add(range);
 		return this;
 	}
 

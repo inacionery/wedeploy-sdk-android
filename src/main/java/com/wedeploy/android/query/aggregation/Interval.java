@@ -82,5 +82,9 @@ public enum Interval {
 	/**
 	 * Represents the interval of one second.
 	 */
-	SECOND
+	SECOND;
+
+	public String getRawValue() {
+		return this.toString().toLowerCase();
+	}
 }

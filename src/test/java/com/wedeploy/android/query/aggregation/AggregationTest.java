@@ -61,24 +61,6 @@ public class AggregationTest {
 	}
 
 	@Test
-	public void testAggregation_histogram_by_interval() throws Exception {
-		JSONAssert.assertEquals(
-			"{\"field\":{\"operator\":\"date_histogram\"," +
-				"\"name\":\"name\",\"value\":\"month\"}}",
-			Aggregation.histogram("name", "field", Interval.MONTH).bodyAsJson(),
-			true);
-	}
-
-	@Test
-	public void testAggregation_histogram_by_time_unit() throws Exception {
-		JSONAssert.assertEquals(
-			"{\"field\":{\"operator\":\"date_histogram\"," +
-				"\"name\":\"name\",\"value\":\"10d\"}}",
-			Aggregation.histogram("name", "field", 10, TimeUnit.DAYS).bodyAsJson(),
-			true);
-	}
-
-	@Test
 	public void testAggregation_distance() throws Exception {
 		JSONAssert.assertEquals(
 			"{\"field\":{\"operator\":\"geoDistance\",\"name\":\"name\"," +
@@ -109,6 +91,62 @@ public class AggregationTest {
 			"{\"field\":{" +
 				"\"operator\":\"histogram\",\"name\":\"name\",\"value\":10}}",
 			Aggregation.histogram("name", "field", 10).bodyAsJson(), true);
+	}
+
+	@Test
+	public void testAggregation_histogram_with_bucket_order() throws Exception {
+		String body = Aggregation.histogram("name", "field", 10,
+			BucketOrder.count(SortOrder.DESCENDING)).bodyAsJson();
+
+		JSONAssert.assertEquals(
+			"{\"field\":{\"name\":\"name\",\"value\":10,"
+				+ "\"operator\":\"histogram\","
+				+ "\"order\":[{\"asc\":false,\"key\":\"_count\"}]}}",
+			body, true);
+	}
+
+	@Test
+	public void testAggregation_histogram_by_interval() throws Exception {
+		JSONAssert.assertEquals(
+			"{\"field\":{\"operator\":\"date_histogram\"," +
+				"\"name\":\"name\",\"value\":\"month\"}}",
+			Aggregation.histogram("name", "field", Interval.MONTH).bodyAsJson(),
+			true);
+	}
+
+	@Test
+	public void testAggregation_histogram_by_interval_with_bucket_order() throws Exception {
+		String body =
+			Aggregation.histogram("name", "field", Interval.MONTH,
+				BucketOrder.count(SortOrder.DESCENDING)).bodyAsJson();
+
+		JSONAssert.assertEquals(
+			"{\"field\":{\"name\":\"name\",\"value\":\"month\","
+				+ "\"operator\":\"date_histogram\","
+				+ "\"order\":[{\"asc\":false,\"key\":\"_count\"}]}}", body, true);
+	}
+
+	@Test
+	public void testAggregation_histogram_by_time_unit() throws Exception {
+		String body = Aggregation.histogram(
+			"name", "field", 10, TimeUnit.DAYS).bodyAsJson();
+
+		JSONAssert.assertEquals(
+			"{\"field\":{\"operator\":\"date_histogram\"," +
+				"\"name\":\"name\",\"value\":\"10d\"}}", body, true);
+	}
+
+	@Test
+	public void testAggregation_histogram_by_time_unit_with_bucket_order() throws Exception {
+		String body =
+			Aggregation.histogram(
+				"name", "field", 10, TimeUnit.DAYS,
+				BucketOrder.count(SortOrder.DESCENDING)).bodyAsJson();
+
+		JSONAssert.assertEquals(
+			"{\"field\":{\"name\":\"name\",\"value\":\"10d\","
+				+ "\"operator\":\"date_histogram\","
+				+ "\"order\":[{\"asc\":false,\"key\":\"_count\"}]}}", body, true);
 	}
 
 	@Test
@@ -205,7 +243,7 @@ public class AggregationTest {
 				+ "\"order\":[{\"asc\":false,\"key\":\"_key\"}]}}",
 			Aggregation.terms("name", "field", 3, key).bodyAsJson(), true);
 
-		TermsAggregation termsAgg1 =
+		BucketOrderAggregation termsAgg1 =
 			Aggregation.terms("name", "field", 3)
 				.addBucketOrder(count)
 				.addBucketOrder(key);
@@ -216,7 +254,7 @@ public class AggregationTest {
 				+ "{\"asc\":false,\"key\":\"_key\"}]}}",
 			termsAgg1.bodyAsJson(), true);
 
-		TermsAggregation termsAgg2 =
+		BucketOrderAggregation termsAgg2 =
 			Aggregation.terms("name", "field", 3, count, key);
 
 		JSONAssert.assertEquals(
