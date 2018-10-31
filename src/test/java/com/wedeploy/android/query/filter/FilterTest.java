@@ -299,11 +299,14 @@ public class FilterTest {
 			"{\"f\":{\"operator\":\"missing\"}}",
 			Filter.missing("f").bodyAsJson(), true);
 		JSONAssert.assertEquals(
-			"{\"f\":{\"operator\":\"range\",\"value\":{\"from\":1,\"to\":2}}}",
+			"{\"f\":{\"operator\":\"range\",\"value\":{\"from\":1,\"to\":2, \"includeLower\": true, \"includeUpper\": true}}}",
 			Filter.range("f", 1, 2).bodyAsJson(), true);
 		JSONAssert.assertEquals(
-			"{\"f\":{\"operator\":\"range\",\"value\":{\"to\":1}}}",
+			"{\"f\":{\"operator\":\"range\",\"value\":{\"to\":1, \"includeLower\": true, \"includeUpper\": true}}}}",
 			Filter.range("f", Range.to(1)).bodyAsJson(), true);
+		JSONAssert.assertEquals(
+			"{\"f\":{\"operator\":\"range\",\"value\":{\"from\":0,\"to\":1, \"includeLower\": false, \"includeUpper\": true}}}}",
+			Filter.range("f", Range.range(0, false, true, 1)).bodyAsJson(), true);
 	}
 
 	private String getCompositeFilter(String operator, int count) {
